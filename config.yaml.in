@@ -1,0 +1,12 @@
+sql:
+  host: <machine running MySQL>
+  user: <SQL user>
+  passwd: <password for this user>
+  db: <database containing systems results>
+cluster:
+  name: <Human-readable name of the cluster>
+  home_prefix: <Path that all home directories live under>
+  qsub: <Full path to SGE qsub binary>
+software:
+  imp_top: <Path to directory containing IMP binaries>
+  modeller_license: <MODELLER license key>
