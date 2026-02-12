@@ -1,4 +1,3 @@
-from __future__ import print_function
 import re
 import os
 import stat
@@ -20,7 +19,7 @@ def read_config():
         return yaml.safe_load(fh)
 
 
-class Environment(object):
+class Environment:
     pass
 
 
@@ -151,7 +150,7 @@ class CondaEnvironment(Environment):
         return 'source %s/bin/activate %s' % (self.miniconda_top, env)
 
 
-class IMPBuildMode(object):
+class IMPBuildMode:
     pass
 
 
@@ -179,7 +178,7 @@ class DebugBuild(IMPBuildMode):
         return "debug"
 
 
-class IMP(object):
+class IMP:
     def __init__(self, imp_top, branch, githash):
         top = os.path.join(imp_top, branch)
         g = glob.glob("%s/*-%s" % (top, githash[:10]))
@@ -217,7 +216,7 @@ class IMP(object):
                % (libdir, libdir, bindir)
 
 
-class Modeller(object):
+class Modeller:
     def __init__(self, license):
         self.license = license
         # Store in instance (not class) so it gets pickled
@@ -227,7 +226,7 @@ class Modeller(object):
         return "module load modeller/%s" % self.version
 
 
-class Repo(object):
+class Repo:
     def __init__(self, url, conda_prereqs):
         self.url = url
         self.conda_prereqs = conda_prereqs
@@ -287,7 +286,7 @@ class Repo(object):
                 'modules': modules, 'use_modeller': use_modeller}
 
 
-class TestResult(object):
+class TestResult:
     def __init__(self, full_testname, errfile, result, time):
         self.full_testname = full_testname
         self.errfile = errfile
@@ -311,7 +310,7 @@ class TestResult(object):
         return "%d days" % t
 
 
-class System(object):
+class System:
     def __init__(self, name, repo, run_hours, run_memory_mb, parallel,
                  subdir=None, use_modeller=False, build_mode=DebugBuild,
                  modules=[]):
@@ -400,7 +399,7 @@ class System(object):
             return
 
 
-class Tester(object):
+class Tester:
     def __init__(self, env, repos, systems, imp, modeller):
         self.env = env
         self.repos = repos

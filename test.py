@@ -102,7 +102,7 @@ def collect_test_results(config):
         print()
 
 
-class SQLImporter(object):
+class SQLImporter:
     def __init__(self, fname):
         self.tester, self.system_results = pickle.load(open(fname, 'rb'))
 
