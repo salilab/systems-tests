@@ -3,14 +3,14 @@
 # We need Python 3.6 on the cluster as the default Python 3 (3.11) does not
 # have the yaml module available
 
-import yaml
 import sys
 import os
 import subprocess
-from utils import IMP, Modeller, System, Tester, read_config
-from utils import FastBuild, ReleaseBuild, DebugBuild, get_all_repos
-from utils import Py2ModulesEnvironment, Py3ModulesEnvironment, CondaEnvironment
+from utils import IMP, Modeller, System, Tester, read_config, get_all_repos
+from utils import Py2ModulesEnvironment, Py3ModulesEnvironment
+from utils import CondaEnvironment
 import pickle
+
 
 def parse_args():
     if len(sys.argv) == 3:
@@ -28,12 +28,13 @@ def parse_args():
         print("in the test job working directory.", file=sys.stderr)
         sys.exit(1)
 
+
 def make_working_dir(config, imp, envtype):
     home_prefix = config['cluster']['home_prefix']
     homedir = os.environ['HOME']
     if not homedir.startswith(home_prefix):
         raise ValueError("Home directory should be under %s" % home_prefix)
-    workdir = os.path.join(homedir, 'imp_biosys_%s_%s_%s' \
+    workdir = os.path.join(homedir, 'imp_biosys_%s_%s_%s'
                            % (imp.branch.replace('/', '_'), imp.githash[:10],
                               envtype))
     if os.path.exists(workdir):
@@ -73,7 +74,7 @@ def start_tests(config, branch, githash, envtype):
     env.setup_working_directory()
     for r in repos.values():
         r.checkout()
-    systems = [System(name, repos[name], subdir='', **repo.parse_metadata()) \
+    systems = [System(name, repos[name], subdir='', **repo.parse_metadata())
                for name, repo in repos.items()]
     t = Tester(env, repos, systems, imp, modeller)
     t.start_tests()
@@ -82,6 +83,7 @@ def start_tests(config, branch, githash, envtype):
     print("All test jobs started. Run this script again with no arguments,")
     print("in the %s directory," % workdir)
     print("to collect results.")
+
 
 def collect_test_results(config):
     t = pickle.load(open('tester.pck', 'rb'))
@@ -98,6 +100,7 @@ def collect_test_results(config):
         print("file to %s, and run this script there on the file."
               % config['sql']['host'])
         print()
+
 
 class SQLImporter(object):
     def __init__(self, fname):
@@ -185,6 +188,7 @@ def main():
         s.import_sql(config)
     else:
         start_tests(config, *args)
+
 
 if __name__ == '__main__':
     main()

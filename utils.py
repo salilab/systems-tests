@@ -1,5 +1,4 @@
 from __future__ import print_function
-import sys
 import re
 import os
 import stat
@@ -14,6 +13,7 @@ import functools
 import yaml
 import pathlib
 
+
 def read_config():
     p = pathlib.Path(__file__)
     with open(p.parent / 'config.yaml') as fh:
@@ -23,11 +23,14 @@ def read_config():
 class Environment(object):
     pass
 
+
 class _ModulesEnvironment(Environment):
     def __init__(self, imp):
         pass
+
     def setup_working_directory(self):
         pass
+
     def setup_system(self, system):
         pass
 
@@ -58,6 +61,7 @@ class Py2ModulesEnvironment(_ModulesEnvironment):
     """Run all tests using system /usr/bin/python2 plus modules"""
     def get_system_setup_script(self, system):
         return self.get_python_setup_script(system, 'python2')
+
 
 # Backwards compatibility
 ModulesEnvironment = Py2ModulesEnvironment
@@ -146,26 +150,34 @@ class CondaEnvironment(Environment):
         env = self._get_environment_name(system)
         return 'source %s/bin/activate %s' % (self.miniconda_top, env)
 
+
 class IMPBuildMode(object):
     pass
+
 
 class FastBuild(IMPBuildMode):
     def get_exetype(self):
         return "fast8"
+
     def get_sql(self):
         return "fast"
+
 
 class ReleaseBuild(IMPBuildMode):
     def get_exetype(self):
         return "release8"
+
     def get_sql(self):
         return "release"
+
 
 class DebugBuild(IMPBuildMode):
     def get_exetype(self):
         return "debug8"
+
     def get_sql(self):
         return "debug"
+
 
 class IMP(object):
     def __init__(self, imp_top, branch, githash):
@@ -174,7 +186,7 @@ class IMP(object):
         if len(g) > 0:
             self.topdir = sorted(g)[-1]
         else:
-            raise ValueError("No IMP build in %s branch with githash %s" \
+            raise ValueError("No IMP build in %s branch with githash %s"
                              % (branch, githash))
         self.branch = branch
         with open("%s/build/imp-gitrev" % self.topdir) as f:
@@ -319,7 +331,8 @@ class System(object):
         self.build_mode = build_mode()
 
     def get_build_url(self):
-        """Get the URL where the files for this *specific* build can be found"""
+        """Get the URL where the files for this *specific* build
+           can be found"""
         # Note: currently assumes everything comes out of the master branch
         # from a github repository
         if self.subdir is None \
@@ -433,6 +446,7 @@ class Tester(object):
         print("\n%d completed, %d still running, %d failed"
               % (done, running, failed))
         return still_running, system_results
+
 
 def get_all_repos():
     """Get a dict of all repos to test"""
