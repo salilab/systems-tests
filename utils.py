@@ -56,16 +56,6 @@ class _ModulesEnvironment(Environment):
         return "\n".join(lines)
 
 
-class Py2ModulesEnvironment(_ModulesEnvironment):
-    """Run all tests using system /usr/bin/python2 plus modules"""
-    def get_system_setup_script(self, system):
-        return self.get_python_setup_script(system, 'python2')
-
-
-# Backwards compatibility
-ModulesEnvironment = Py2ModulesEnvironment
-
-
 class Py3ModulesEnvironment(_ModulesEnvironment):
     """Run all tests using system /usr/bin/python3 plus modules"""
     python_prefix = 'python3/'
@@ -133,9 +123,7 @@ class CondaEnvironment(Environment):
         # Remove old environment (ignore errors, since it may not exist)
         subprocess.call([self.conda_bin, 'remove', '-n', env, '-y', '--all'])
         # Create a conda environment containing all packages the system needs
-        # argparse is only needed for Python 2.6, and our conda install
-        # is Python 3
-        prereqs = [p for p in system.repo.conda_prereqs if p != 'argparse']
+        prereqs = [p for p in system.repo.conda_prereqs]
         # Some tests need BinaryCIF support, which needs msgpack
         prereqs.append("msgpack-python")
         if self.imp_package != 'imp' and 'imp' in prereqs:

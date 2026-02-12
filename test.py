@@ -7,22 +7,21 @@ import sys
 import os
 import subprocess
 from utils import IMP, Modeller, System, Tester, read_config, get_all_repos
-from utils import Py2ModulesEnvironment, Py3ModulesEnvironment
-from utils import CondaEnvironment
+from utils import Py3ModulesEnvironment, CondaEnvironment
 import pickle
 
 
 def parse_args():
     if len(sys.argv) == 3:
         return sys.argv[1], sys.argv[2], 'python3'
-    elif len(sys.argv) == 4 and sys.argv[1] in ('--conda', '--python2'):
+    elif len(sys.argv) == 4 and sys.argv[1] == '--conda':
         return sys.argv[2], sys.argv[3], sys.argv[1][2:]
     elif len(sys.argv) == 2:
         return sys.argv[1]
     elif len(sys.argv) != 1 or not os.path.exists('tester.pck'):
         print("Usage:", file=sys.stderr)
         print("To start a test run:", file=sys.stderr)
-        print("    %s [--conda|--python2] branch githash"
+        print("    %s [--conda] branch githash"
               % sys.argv[0], file=sys.stderr)
         print("To collect results, run with no arguments", file=sys.stderr)
         print("in the test job working directory.", file=sys.stderr)
@@ -68,8 +67,7 @@ def start_tests(config, branch, githash, envtype):
     imp = IMP(config['software']['imp_top'], branch, githash)
     modeller = Modeller(config['software']['modeller_license'])
     workdir = make_working_dir(config, imp, envtype)
-    env = {'python2': Py2ModulesEnvironment,
-           'python3': Py3ModulesEnvironment,
+    env = {'python3': Py3ModulesEnvironment,
            'conda': CondaEnvironment}[envtype](imp, modeller)
     env.setup_working_directory()
     for r in repos.values():
