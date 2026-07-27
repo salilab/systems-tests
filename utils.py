@@ -24,7 +24,7 @@ class Environment:
 
 
 class _ModulesEnvironment(Environment):
-    def __init__(self, imp):
+    def __init__(self, imp, modeller):
         pass
 
     def setup_working_directory(self):
